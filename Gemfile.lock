@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    fakes3 (2.0.1)
+    fakes3 (3.0.0)
       builder
       rexml
       sorted_set
