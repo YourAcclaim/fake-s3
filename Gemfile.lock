@@ -3,7 +3,6 @@ PATH
   specs:
     fakes3 (3.0.0)
       builder
-      rexml
       sorted_set
       thor
       webrick

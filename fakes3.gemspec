@@ -27,7 +27,6 @@ Gem::Specification.new do |s|
   s.add_dependency "builder"
   s.add_dependency "xml-simple"
   s.add_dependency "webrick"
-  s.add_dependency "rexml"
   s.add_dependency "sorted_set"
 
   s.files         = `git ls-files`.split("\n")
