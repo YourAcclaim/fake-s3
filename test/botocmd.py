@@ -8,8 +8,7 @@ import os
 from optparse import OptionParser
 
 try:
-    from boto.s3.connection import S3Connection, OrdinaryCallingFormat
-    from boto.s3.key import Key
+    from boto3 import client as boto3_client
 except ImportError:
     raise Exception('You must install the boto package for python')
 
@@ -24,12 +23,13 @@ class FakeS3Cmd(object):
 
     def _connect(self):
         print('Connecting: %s:%s' % (self.host, self.port))
-        self.conn = S3Connection(is_secure=False,
-                                 calling_format=OrdinaryCallingFormat(),
-                                 aws_access_key_id='',
-                                 aws_secret_access_key='',
-                                 port=self.port, host=self.host)
-
+        self.conn = boto3_client(
+          's3',
+          endpoint_url='http://%s:%s' % (self.host, self.port),
+          use_ssl=False,
+          aws_access_key_id='',
+          aws_secret_access_key=''
+        )
 
     @staticmethod
     def _parse_uri(path):
@@ -42,7 +42,7 @@ class FakeS3Cmd(object):
             self._connect()
 
         bucket, _ = self._parse_uri(path)
-        self.conn.create_bucket(bucket)
+        self.conn.create_bucket(Bucket=bucket)
         print('made bucket: [%s]' % bucket)
 
     def rb(self, path, *args):
@@ -50,7 +50,7 @@ class FakeS3Cmd(object):
             self._connect()
 
         bucket, _ = self._parse_uri(path)
-        self.conn.delete_bucket(bucket)
+        self.conn.delete_bucket(Bucket=bucket)
         print('removed bucket: [%s]' % bucket)
 
     def put(self, *args):
@@ -60,12 +60,15 @@ class FakeS3Cmd(object):
         args = list(args)
         path = args.pop()
         bucket_name, prefix = self._parse_uri(path)
-        bucket = self.conn.create_bucket(bucket_name)
+        bucket = self.conn.create_bucket(Bucket=bucket_name)
         for src_file in args:
-            key = Key(bucket)
-            key.key = os.path.join(prefix, os.path.basename(src_file))
-            key.set_contents_from_filename(src_file)
-            print('stored: [%s]' % key.key)
+            key = os.path.join(prefix, os.path.basename(src_file))
+            self.conn.put_object(
+                Bucket=bucket_name,
+                Key=key,
+                Body=open(src_file, 'rb')
+            )
+            print('stored: [%s]' % key)
 
 
 if __name__ == "__main__":
