@@ -1,9 +1,6 @@
-FROM ruby:3.0.5-alpine3.16
+FROM ruby:3.2.3-alpine3.19
 
-RUN apk add --no-cache --update python3 py-pip git build-base libxml2-dev libxslt-dev bash
-RUN pip install boto s3cmd
-
-RUN ln -sf python3 /usr/bin/python
+RUN apk add --no-cache --update python3 py-pip git s3cmd py3-boto3 build-base libxml2-dev libxslt-dev bash
 
 RUN echo "#!/bin/sh" >> /entrypoint.sh &&  \
     echo "echo '127.0.0.1 posttest.localhost v2.bucket.localhost' >>/etc/hosts" >>/entrypoint.sh && \
