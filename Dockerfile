@@ -1,4 +1,4 @@
-FROM ruby:3.2.3-alpine3.19
+FROM public.ecr.aws/docker/library/ruby:3.2.3-alpine3.19
 
 RUN apk add --no-cache --update python3 py-pip git s3cmd py3-boto3 build-base libxml2-dev libxslt-dev bash
 
