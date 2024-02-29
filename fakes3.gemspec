@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "aws-s3"
   s.add_development_dependency "right_aws"
   s.add_development_dependency "rest-client"
-  s.add_development_dependency "rake"
+  s.add_development_dependency "rake", "~> 13.0.6"
   s.add_development_dependency "aws-sdk", "~> 2"
   s.add_development_dependency "test-unit"
   s.add_development_dependency "mocha"
